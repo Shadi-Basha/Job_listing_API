@@ -10,29 +10,30 @@ class jobFilter {
     req;
 
     filterBuilding(req) {
-        this.sql = "SELECT j.job_id,j.job_title,j.job_targeted_people,j.job_salary_min,j.job_salary_max FROM jobs j WHERE ";
+        this.sql = "SELECT j.id,j.title,j.targetedPeople,j.salaryMin,j.salaryMax FROM jobs j WHERE 1=1 ";
         let filter = "";
-        if (req.body.job_id) {
-            filter += " job_id = " + format(req.body.job_id);
+        let flage = false;
+        if (req.body.id) {
+            filter += " and id = " + format(req.body.id);
         }
-        if (req.body.job_title) {
-            filter += " job_title = " + format(req.body.job_title);
+        if (req.body.title) {
+            filter += "and title = " + format(req.body.title);
         }
-        if (req.body.job_salary_max) {
-            filter += " job_salary_max <= " + req.body.job_salary_max;
+        if (req.body.salaryMax) {
+            filter += " and salaryMax <= " + req.body.salaryMax;
         }
-        if (req.body.job_salary_min || req.body.job_salary_min == 0) {
-            filter += " job_salary_min >= " + req.body.job_salary_min;
+        if (req.body.salaryMin || req.body.salaryMin == 0) {
+            filter += " and salaryMin >= " + req.body.salaryMin;
         }
-        if (req.body.job_targeted_people) {
-            filter += " job_targeted_people = " + format(req.body.job_targeted_people);
+        if (req.body.targetedPeople) {
+            filter += " and targetedPeople = " + format(req.body.targetedPeople);
         }
         this.sql += filter;
     }
 };
 
 exports.getJobs = (req, res, next) => {
-    conn.query("SELECT  j.job_id,j.job_title,j.job_targeted_people,j.job_salary_min,j.job_salary_max FROM jobs j",
+    conn.query("SELECT j.id,j.title,j.targetedPeople,j.salaryMin,j.salaryMax FROM jobs j",
         function (err, data, fields) {
             if (err) return next(new AppError(err))
             res.status(200).json({
@@ -48,7 +49,7 @@ exports.getJobsUsingId = (req, res, next) => {
         return next(new AppError("No job id found", 404));
     }
     conn.query(
-        "SELECT * FROM jobs WHERE job_id = ?",
+        "SELECT * FROM jobs WHERE id = ?",
         [req.params.id],
         function (err, data, fields) {
             if (err) return next(new AppError(err, 500));

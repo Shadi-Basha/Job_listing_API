@@ -16,8 +16,8 @@ class jobUpdater {
     }
 
     updateJob(type, req) {
-        this.sql = "UPDATE jobs SET job_" + type + " = ? where job_id = ?";
-        this.message = "job " + type.split("_").join(" ") + " updated";
+        this.sql = "UPDATE jobs SET " + type + " = ? where id = ?";
+        this.message = "job " + type + " updated";
         this.values = [req.body.data, req.params.id]
         // other solotion : name the data in the json
         // if (type == "title") {
@@ -44,7 +44,7 @@ class jobUpdater {
 exports.updatejobs = (req, res, next) => {
     if (!req.params.id) {
         return next(new AppError("No job id found", 404));
-// error handling for the id that does not exist and make sure that the variable does exist.
+        // error handling for the id that does not exist and make sure that the variable does exist.
     }
     jobUpdate = new jobUpdater(req.params.type, req);
     conn.query(
