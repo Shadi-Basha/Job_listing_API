@@ -19,9 +19,3 @@ app.listen(
     PORT,
     () => console.log(`it is alive on http://localhost:${PORT}`)
 );
-
-module.exports = app;
-
-
-
-
