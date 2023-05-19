@@ -44,7 +44,7 @@ exports.getJobs = (req, res, next) => {
         });
 };
 
-exports.getJobsUsingId = (req, res, next) => {
+exports.getJobsById = (req, res, next) => {
     if (!req.params.id) {
         return next(new AppError("No job id found", 404));
     }

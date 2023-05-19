@@ -3,6 +3,8 @@ const jobsController = require("../controllers/jobs");
 const jobsFilterController = require("../controllers/jobFilter");
 const jobsUpdateController = require("../controllers/jobUpdate");
 const applicationController = require("../controllers/jobApplication");
+const applicationUpdaterController = require("../controllers/jobApplicationUpdater");
+const userController = require("../controllers/user");
 const router = express.Router();
 
 router
@@ -16,7 +18,7 @@ router
 
 router
     .route("/jobs/:id")
-    .get(jobsFilterController.getJobsUsingId)
+    .get(jobsFilterController.getJobsById)
     .delete(jobsController.deleteJob);
 
 router
@@ -30,26 +32,34 @@ router
 
 router
     .route("/applications/:id")
-    .get(applicationController.getApplicationById);
+    .get(applicationController.getApplicationById)
+    .delete(applicationController.deleteApplication);
 
 router
-    .route("/user");
+    .route("/user")
+    .get(userController.showAllUsers);
 
 router
-    .route("/user/:id");
+    .route("/user/registration")
+    .post(userController.addUser);
 
 router
-    .route("/user/:id/applications");
+    .route("/user/:id")
+    .get(userController.getUserById)
+    .delete(userController.deleteUser);
 
 router
-    .route("/user/:userId/applications/:applicationId");
+    .route("/user/:id/applications")
+    .get(applicationController.getUserApplications);
+
+router
+    .route("/user/:userId/applications/:applicationId")
+    .get(applicationController.getUserApplicationsbyId)
+    .post(applicationUpdaterController.updateApplications);
 
 
 
 module.exports = router;
-
-
-// /jobs/:id/:type
 
 
 

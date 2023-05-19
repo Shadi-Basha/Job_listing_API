@@ -58,4 +58,60 @@ exports.getApplicationById = (req, res, next) => {
             });
         }
     );
-} 
+}
+
+exports.deleteApplication = (req, res, next) => {
+    if (!req.params.id) {
+        return next(new AppError("No application id found", 404));
+    }
+    conn.query(
+        "DELETE FROM application WHERE id = ?",
+        [req.params.id],
+        function (err, fields) {
+            if (err) return next(new AppError(err, 500));
+            res.status(201).json({
+                status: "success",
+                message: "application deleted",
+            });
+        }
+    );
+};
+
+exports.getUserApplications = (req, res, next) => {
+    if (!req.params.id) {
+        return next(new AppError("No user id found", 404));
+    }
+    conn.query(
+        "SELECT * FROM applications WHERE userId = ?",
+        [req.params.id],
+        function (err, data, fields) {
+            if (err) return next(new AppError(err, 500));
+            res.status(200).json({
+                status: "success",
+                length: data?.length,
+                data: data,
+            });
+        }
+    );
+}
+
+exports.getUserApplicationsbyId = (req, res, next) => {
+    if (!req.params.userId) {
+        return next(new AppError("No user id found", 404));
+    }
+    if (!req.params.applicationId) {
+        return next(new AppError("No application id found", 404));
+    }
+    conn.query(
+        "SELECT * FROM applications WHERE userId = ? and id = ? ",
+        [req.params.userId, applicationId],
+        function (err, data, fields) {
+            if (err) return next(new AppError(err, 500));
+            res.status(200).json({
+                status: "success",
+                length: data?.length,
+                data: data,
+            });
+        }
+    );
+}
