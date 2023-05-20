@@ -1,9 +1,7 @@
 const express = require("express");
 const jobsController = require("../controllers/jobs");
 const jobsFilterController = require("../controllers/jobFilter");
-const jobsUpdateController = require("../controllers/jobUpdate");
 const applicationController = require("../controllers/jobApplication");
-const applicationUpdaterController = require("../controllers/jobApplicationUpdater");
 const userController = require("../controllers/user");
 const router = express.Router();
 
@@ -28,12 +26,16 @@ router
 
 router
     .route("/jobs/:id/:type")
-    .post(jobsUpdateController.updatejobs);
+    .post(jobsController.updateJob);
 
 router
     .route("/applications/:id")
     .get(applicationController.getApplicationById)
     .delete(applicationController.deleteApplication);
+
+router
+    .route("/applications/:id/:type")
+    .post(applicationController.updateApplication);
 
 router
     .route("/user")
@@ -54,9 +56,7 @@ router
 
 router
     .route("/user/:userId/applications/:applicationId")
-    .get(applicationController.getUserApplicationsbyId)
-    .post(applicationUpdaterController.updateApplications);
-
+    .get(applicationController.getUserApplicationsbyId);
 
 
 module.exports = router;

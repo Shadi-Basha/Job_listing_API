@@ -1,0 +1,12 @@
+advance software homework api description : 
+/jobs  listing jobs and adding  
+/jobs/filter filtering jobs using post 
+/jobs/:id deleting or viewing a job
+/jobs/:id/applications viewing the applications of a certain job and adding an application for the job
+/jobs/:id/:type updating a job type can be anything on the job table ex. title, salaryMax etc
+/applications/:id opening an application, and deleting an application
+/user showing all users and adding users 
+/user/:id showing a user and deleting a user
+/user/:id/applications showing the application that the user submitted 
+/user/:userId/applications/:applicationId deleting an application for a user, and showing the application 
+/user/:userId/applications/:applicationId/:type updating an application

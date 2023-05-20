@@ -1,9 +1,24 @@
 const AppError = require("../utils/appError");
+const addData = require("./addData");
+const deleteData = require("./deleteData");
+const updateData = require("./updateData");
 const conn = require("../services/db");
 
+class Job {
+    constructor(id, title, description, requirement, salaryMin, salaryMax, targetedPeople) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.requirement = requirement;
+        this.salaryMin = salaryMin;
+        this.salaryMax = salaryMax;
+        this.targetedPeople = targetedPeople;
+    }
+}
+
+
 exports.addJob = (req, res, next) => {
-    if (!req.body) return next(new AppError("No form data found", 404));
-    const values = [
+    const job = new Job(
         req.body.id,
         req.body.title,
         req.body.description,
@@ -11,35 +26,17 @@ exports.addJob = (req, res, next) => {
         req.body.salaryMin,
         req.body.salaryMax,
         req.body.targetedPeople
-    ];
-    conn.query(
-        "INSERT INTO jobs VALUES(?)",
-        [values],
-        function (err, data, fields) {
-            if (err) return next(new AppError(err, 500));
-            res.status(201).json({
-                status: "success",
-                message: "Job added",
-            });
-        }
     );
+
+    addData.addDataToTable(req, res, next, job);
+};
+
+exports.updateJob = (req, res, next) => {
+    updateData.updateTable(req, res, next, "jobs");
 };
 
 exports.deleteJob = (req, res, next) => {
-    if (!req.params.id) {
-        return next(new AppError("No job id found", 404));
-    }
-    conn.query(
-        "DELETE FROM jobs WHERE id = ?",
-        [req.params.id],
-        function (err, fields) {
-            if (err) return next(new AppError(err, 500));
-            res.status(201).json({
-                status: "success",
-                message: "job deleted",
-            });
-        }
-    );
+    deleteData.deleteDataFromTable(req, res, next, "jobs", req.params.id);
 };
 
 
