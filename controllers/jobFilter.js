@@ -14,7 +14,7 @@ class jobFilter {
         let filter = "";
         let flage = false;
         if (req.body.id) {
-            filter += " and id = " + format(req.body.id);
+            filter += " and id = " + req.body.id;
         }
         if (req.body.title) {
             filter += "and title = " + format(req.body.title);

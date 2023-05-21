@@ -3,6 +3,7 @@ const addData = require("./addData");
 const deleteData = require("./deleteData");
 const updateData = require("./updateData");
 const conn = require("../services/db");
+const auth = require("./authentication");
 
 class Job {
     constructor(id, title, description, requirement, salaryMin, salaryMax, targetedPeople) {
@@ -27,7 +28,7 @@ exports.addJob = (req, res, next) => {
         req.body.salaryMax,
         req.body.targetedPeople
     );
-
+    auth.authenticateToken();
     addData.addDataToTable(req, res, next, job);
 };
 

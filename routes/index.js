@@ -8,7 +8,7 @@ const router = express.Router();
 router
     .route("/jobs")
     .get(jobsFilterController.getJobs)
-    .post(jobsController.addJob);
+    .post(jobsController.addJob); // authentcation needed
 
 router
     .route("/jobs/filter")
@@ -21,21 +21,21 @@ router
 
 router
     .route("/jobs/:id/applications")
-    .post(applicationController.submitApplication)
+    .post(applicationController.submitApplication) // authentication needed
     .get(applicationController.getApplicationsForJob);
 
 router
     .route("/jobs/:id/:type")
-    .post(jobsController.updateJob);
+    .post(jobsController.updateJob); // authentication needed
 
 router
     .route("/applications/:id")
     .get(applicationController.getApplicationById)
-    .delete(applicationController.deleteApplication);
+    .delete(applicationController.deleteApplication); // authentication needed
 
 router
     .route("/applications/:id/:type")
-    .post(applicationController.updateApplication);
+    .post(applicationController.updateApplication); // authentication needed
 
 router
     .route("/user")
@@ -46,17 +46,21 @@ router
     .post(userController.addUser);
 
 router
+    .route("/user/login")
+    .post(userController.login);// token genrated done
+
+router
     .route("/user/:id")
     .get(userController.getUserById)
-    .delete(userController.deleteUser);
+    .delete(userController.deleteUser); // authentication done
 
 router
     .route("/user/:id/applications")
-    .get(applicationController.getUserApplications);
+    .get(applicationController.getUserApplications); // authentication needed
 
 router
     .route("/user/:userId/applications/:applicationId")
-    .get(applicationController.getUserApplicationsbyId);
+    .get(applicationController.getUserApplicationsbyId); // authentication needed 
 
 
 module.exports = router;
