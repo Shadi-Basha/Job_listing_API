@@ -4,7 +4,7 @@ const addData = require("./addData");
 const deleteData = require("./deleteData");
 const auth = require('./authentication');
 const access = require("./access");
-
+const emailChecker = require("../externalApi/emailChecker");
 class User {
     constructor(id, name, password, birthdate, gender, email, type) {
         this.id = id;
@@ -42,8 +42,14 @@ exports.addUser = async (req, res, next) => {
         req.body.email,
         req.body.type
     );
-
-    addData.addDataToTable(req, res, next, user);
+    
+    const apiResponse = await emailChecker.checkEmail(req.body.email);
+    if(apiResponse.valid == true){
+        addData.addDataToTable(req, res, next, user);
+    }
+    else {
+        next(new AppError('Email not valid', 401));
+    }
 };
 
 exports.deleteUser = async (req, res, next) => {
@@ -57,7 +63,7 @@ exports.deleteUser = async (req, res, next) => {
 
 exports.showAllUsers = async (req, res, next) => {
     if (await access.admin(req, res, next)) {
-        conn.query("SELECT u.id, u.name, u.birthdate, u.gender, u.email, u.type FROM users",
+        conn.query("SELECT u.id, u.name, u.birthdate, u.gender, u.email, u.type FROM users u",
             function (err, data, fields) {
                 if (err) return next(new AppError(err))
                 res.status(200).json({
@@ -124,4 +130,3 @@ exports.login = async (req, res, next) => {
         return next(err);
     }
 };
-

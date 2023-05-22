@@ -55,9 +55,8 @@ router
 
 router
     .route("/user/:userId/applications/:applicationId")
-    .get(applicationController.getUserApplicationsbyId) // authentication needed
-    .delete(applicationController.deleteApplication); // authentication needed 
-
+    .get(applicationController.getUserApplicationsbyId) // authentication done 
+    .delete(applicationController.deleteApplication); // authentication done
 
 module.exports = router;
 
