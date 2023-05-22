@@ -8,7 +8,7 @@ const router = express.Router();
 router
     .route("/jobs")
     .get(jobsFilterController.getJobs)
-    .post(jobsController.addJob); // authentcation needed
+    .post(jobsController.addJob); // authentcation added
 
 router
     .route("/jobs/filter")
@@ -17,21 +17,16 @@ router
 router
     .route("/jobs/:id")
     .get(jobsFilterController.getJobsById)
-    .delete(jobsController.deleteJob);
+    .delete(jobsController.deleteJob); // authentication done
 
 router
     .route("/jobs/:id/applications")
-    .post(applicationController.submitApplication) // authentication needed
-    .get(applicationController.getApplicationsForJob);
+    .post(applicationController.submitApplication) // authentication done
+    .get(applicationController.getApplicationsForJob); //authentication done
 
 router
     .route("/jobs/:id/:type")
-    .post(jobsController.updateJob); // authentication needed
-
-router
-    .route("/applications/:id")
-    .get(applicationController.getApplicationById)
-    .delete(applicationController.deleteApplication); // authentication needed
+    .post(jobsController.updateJob); // authentication done
 
 router
     .route("/applications/:id/:type")
@@ -56,11 +51,12 @@ router
 
 router
     .route("/user/:id/applications")
-    .get(applicationController.getUserApplications); // authentication needed
+    .get(applicationController.getUserApplications); // authentication done
 
 router
     .route("/user/:userId/applications/:applicationId")
-    .get(applicationController.getUserApplicationsbyId); // authentication needed 
+    .get(applicationController.getUserApplicationsbyId) // authentication needed
+    .delete(applicationController.deleteApplication); // authentication needed 
 
 
 module.exports = router;

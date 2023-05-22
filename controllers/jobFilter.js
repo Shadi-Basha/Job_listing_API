@@ -14,19 +14,19 @@ class jobFilter {
         let filter = "";
         let flage = false;
         if (req.body.id) {
-            filter += " and id = " + req.body.id;
+            filter += " and id = " + req.body.id + " ";
         }
         if (req.body.title) {
-            filter += "and title = " + format(req.body.title);
+            filter += "and title = " + format(req.body.title) + " ";
         }
         if (req.body.salaryMax) {
-            filter += " and salaryMax <= " + req.body.salaryMax;
+            filter += " and salaryMax <= " + req.body.salaryMax + " ";
         }
         if (req.body.salaryMin || req.body.salaryMin == 0) {
-            filter += " and salaryMin >= " + req.body.salaryMin;
+            filter += " and salaryMin >= " + req.body.salaryMin + " ";
         }
         if (req.body.targetedPeople) {
-            filter += " and targetedPeople = " + format(req.body.targetedPeople);
+            filter += " and targetedPeople = " + format(req.body.targetedPeople) + " ";
         }
         this.sql += filter;
     }

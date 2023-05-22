@@ -21,6 +21,9 @@ exports.updateTable = (req, res, next, table) => {
     }
 
     const column = req.params.type;
+    if (column == 'id') {
+        return next(new AppError("id can't be updated", 401));
+    }
     const tableUpdater = new TableUpdater(table, column, req);
 
     conn.query(tableUpdater.sql, tableUpdater.values, function (err, data, fields) {

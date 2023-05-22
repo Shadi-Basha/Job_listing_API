@@ -1,8 +1,9 @@
+const AppError = require("../utils/appError");
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
-const generateToken = (userId) => {
-    const token = jwt.sign({ userId }, "test", {
+const generateToken = (userId, userEmail) => {
+    const token = jwt.sign({ userId, userEmail }, "test", {
         expiresIn: '1d',
     });
     return token;

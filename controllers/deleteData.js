@@ -9,7 +9,7 @@ exports.deleteDataFromTable = (req, res, next, tableName) => {
 
         res.status(200).json({
             status: "success",
-            message: "User deleted",
+            message: tableName + " deleted",
         });
     });
 };
