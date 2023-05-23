@@ -5,7 +5,7 @@ const deleteData = require("./deleteData");
 const updateDate = require("./updateData");
 const access = require("./access");
 const job = require("./jobs")
-
+const auth = require("./authentication");
 
 class Application {
     constructor(id, resume, coverLetter, jobId, userId) {
@@ -18,21 +18,24 @@ class Application {
 }
 
 exports.submitApplication = async (req, res, next) => {
-    const application = new Application(
-        req.body.id,
-        req.body.resume,
-        req.body.coverLetter,
-        req.params.id,
-        req.body.userId
-    );
-    if (await access.onlyId(req.body.userId, req, res, next) == true) {
+    const token = auth.authenticateToken(req, res, next);
+    if (token) {
+        const application = new Application(
+            req.body.id,
+            req.body.resume,
+            req.body.coverLetter,
+            req.params.id,
+            token.userId
+        );
         addData.addDataToTable(req, res, next, application);
     } else
         next(new AppError('Not authorized', 401));
 };
 
 exports.updateApplication = async (req, res, next) => {
-    if (await access.onlyId(req.params.id, req, res, next) == true) {
+    const token = auth.authenticateToken(req, res, next);
+
+    if (await access.onlyId(req.params.userId, req, res, next) == true) {
         updateDate.updateTable(req, res, next, "applications");
     } else
         next(new AppError('Not authorized', 401));
@@ -42,7 +45,7 @@ exports.updateApplication = async (req, res, next) => {
 exports.deleteApplication = async (req, res, next) => {
 
     if (await access.onlyId(req.params.userId, req, res, next) == true) {
-        deleteData.deleteDataFromTable(req, res, next, "applications");
+        deleteData.deleteDataFromTable(req.params.applicationId, res, next, "applications");
     } else
         next(new AppError('Not authorized', 401));
 };
@@ -54,21 +57,26 @@ exports.getApplicationsForJob = async (req, res, next) => {
     }
 
     const jobData = await job.getJobById(req.params.id);
-    if (await access.onlyId(jobData.userId, req, res, next) == true) {
-        conn.query(
-            "SELECT * FROM applications WHERE jobId = ?",
-            [req.params.id],
-            function (err, data, fields) {
-                if (err) return next(new AppError(err, 500));
-                res.status(200).json({
-                    status: "success",
-                    length: data?.length,
-                    data: data,
-                });
-            }
-        );
-    } else
-        next(new AppError('Not authorized', 401));
+    if(jobData){
+        if (await access.onlyId(jobData.userId, req, res, next) == true) {
+            conn.query(
+                "SELECT * FROM applications WHERE jobId = ?",
+                [req.params.id],
+                function (err, data, fields) {
+                    if (err) return next(new AppError(err, 500));
+                    res.status(200).json({
+                        status: "success",
+                        length: data?.length,
+                        data: data,
+                    });
+                }
+            );
+        } else
+            next(new AppError('Not authorized', 401));
+    }
+    else {
+        next(new AppError('Job not found', 404));
+    }
 }
 
 exports.getApplicationById = (req, res, next) => {
@@ -116,7 +124,6 @@ exports.getUserApplications = async (req, res, next) => {
 
 exports.getUserApplicationsbyId = async (req, res, next) => {
 
-
     if (!req.params.userId) {
         return next(new AppError("No user id found", 404));
     }
@@ -139,4 +146,11 @@ exports.getUserApplicationsbyId = async (req, res, next) => {
         );
     } else
         next(new AppError('Not authorized', 401));
+}
+
+exports.deleteAllApplicationsWithJobId = (id) => {
+    const query = "DELETE FROM applications WHERE jobId = ?";
+    conn.query(query, id, function (err, fields) {
+        if (err) return next(new AppError(err, 500));
+    });
 }

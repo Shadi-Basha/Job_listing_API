@@ -13,19 +13,19 @@ class jobFilter {
         this.sql = "SELECT j.id,j.title,j.targetedPeople,j.salaryMin,j.salaryMax FROM jobs j WHERE 1=1 ";
         let filter = "";
         let flage = false;
-        if (req.body.id) {
+        if (req.body.id && req.body.id != null) {
             filter += " and id = " + req.body.id + " ";
         }
-        if (req.body.title) {
+        if (req.body.title && req.body.title != "") {
             filter += "and title = " + format(req.body.title) + " ";
         }
-        if (req.body.salaryMax) {
+        if (req.body.salaryMax && req.body.salaryMax != "") {
             filter += " and salaryMax <= " + req.body.salaryMax + " ";
         }
-        if (req.body.salaryMin || req.body.salaryMin == 0) {
+        if ((req.body.salaryMin || req.body.salaryMin == 0) && req.body.salaryMin != "") {
             filter += " and salaryMin >= " + req.body.salaryMin + " ";
         }
-        if (req.body.targetedPeople) {
+        if (req.body.targetedPeople && req.body.targetedPeople != "") {
             filter += " and targetedPeople = " + format(req.body.targetedPeople) + " ";
         }
         this.sql += filter;
@@ -70,7 +70,7 @@ exports.filterJobs = (req, res, next) => {
         filter.sql,
         [],
         function (err, data, fields) {
-            if (err) return next(new AppError(filter.sql, 500));
+            if (err) return next(new AppError(err, 500));
             res.status(200).json({
                 status: "success",
                 length: data?.length,

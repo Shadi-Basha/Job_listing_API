@@ -5,6 +5,8 @@ const deleteData = require("./deleteData");
 const auth = require('./authentication');
 const access = require("./access");
 const emailChecker = require("../externalApi/emailChecker");
+const updateData = require("./updateData");
+
 class User {
     constructor(id, name, password, birthdate, gender, email, type) {
         this.id = id;
@@ -52,10 +54,17 @@ exports.addUser = async (req, res, next) => {
     }
 };
 
+exports.updateUser = async (req, res, next) => {
+    if (await access.onlyId(req.params.id, req, res, next) == true) {
+        await updateData.updateTable(req, res, next, "users");
+    } else
+        next(new AppError('Not authorized', 401));
+}
+
 exports.deleteUser = async (req, res, next) => {
 
     if (await access.onlyId(req.params.id, req, res, next) == true) {
-        deleteData.deleteDataFromTable(req, res, next, "users");
+        deleteData.deleteDataFromTable(req.params.id, res, next, "users");
     } else
         next(new AppError('Not authorized', 401));
 
@@ -130,3 +139,5 @@ exports.login = async (req, res, next) => {
         return next(err);
     }
 };
+
+

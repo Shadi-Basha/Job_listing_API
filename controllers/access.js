@@ -32,10 +32,13 @@ exports.BlockSeeker = async (req, res, next) => {
 exports.onlyId = async (id, req, res, next) => {
     const accessTemp = new access();
     const check = await accessTemp.getDataToken(req, res, next);
-    if (!check || (accessTemp.userData.id != id && accessTemp.userData.type != 'A')) {
-        return false;
+    if(accessTemp.userData){
+        if (!check || (accessTemp.userData.id != id && accessTemp.userData.type != 'A')) {
+            return false;
+        }
+        return true;
     }
-    return true;
+    return false;
 } 
 
 exports.admin = async (req, res, next) => {

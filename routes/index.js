@@ -29,15 +29,8 @@ router
     .post(jobsController.updateJob); // authentication done
 
 router
-    .route("/applications/:id/:type")
-    .post(applicationController.updateApplication); // authentication needed
-
-router
     .route("/user")
-    .get(userController.showAllUsers);
-
-router
-    .route("/user/registration")
+    .get(userController.showAllUsers)
     .post(userController.addUser);
 
 router
@@ -53,10 +46,19 @@ router
     .route("/user/:id/applications")
     .get(applicationController.getUserApplications); // authentication done
 
+router 
+    .route("/user/:id/:type")
+    .post(userController.updateUser);
+
 router
     .route("/user/:userId/applications/:applicationId")
     .get(applicationController.getUserApplicationsbyId) // authentication done 
     .delete(applicationController.deleteApplication); // authentication done
+    
+router
+.route("/user/:userId/applications/:id/:type")
+.post(applicationController.updateApplication); // authentication needed
+
 
 module.exports = router;
 

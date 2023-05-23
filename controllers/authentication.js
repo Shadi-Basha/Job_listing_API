@@ -30,8 +30,7 @@ const comparePasswords = async (password, hashedPassword) => {
 };
 
 const authenticateToken = (req, res, next) => {
-    const token = req.body.token;
-
+    const token = req.headers.authorization;
     if (!token) {
         return next(new AppError('No token provided', 401));
     }
